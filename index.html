@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Certification Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+    input, button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #2596be;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1d7ca0;
+    }
+    #searchResult {
+      margin-top: 20px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Search by NIC</h3>
+    <input type="text" id="nicSearch" placeholder="Enter NIC to search">
+    <button id="searchBtn">Search</button>
+    <div id="searchResult"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBB1Lu7Njr3GguGPFUQnoU1GNExRnMdeVU",
+      authDomain: "qr-project-6f5cd.firebaseapp.com",
+      projectId: "qr-project-6f5cd",
+      storageBucket: "qr-project-6f5cd.appspot.com",
+      messagingSenderId: "724489680639",
+      appId: "1:724489680639:web:606bf485733128174e7eca",
+      measurementId: "G-HC7TYM28VW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('searchBtn').addEventListener('click', async () => {
+      const nicSearch = document.getElementById('nicSearch').value.trim();
+
+      if (nicSearch) {
+        try {
+          const q = query(collection(db, 'Students'), where('nic', '==', nicSearch));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const link = `data.html?nic=${nicSearch}`; // Change to your data display page
+            // Redirect to the data page with the NIC
+            window.location.href = link;
+          } else {
+            document.getElementById('searchResult').textContent = 'No data found for this NIC.';
+          }
+        } catch (error) {
+          console.error('Error searching NIC:', error);
+        }
+      } else {
+        document.getElementById('searchResult').textContent = 'Please enter an NIC to search.';
+      }
+    });
+  </script>
+</body>
+</html>

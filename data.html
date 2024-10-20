@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>User Data</h3>
+    <div id="userData"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBB1Lu7Njr3GguGPFUQnoU1GNExRnMdeVU",
+      authDomain: "qr-project-6f5cd.firebaseapp.com",
+      projectId: "qr-project-6f5cd",
+      storageBucket: "qr-project-6f5cd.appspot.com",
+      messagingSenderId: "724489680639",
+      appId: "1:724489680639:web:606bf485733128174e7eca",
+      measurementId: "G-HC7TYM28VW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const getNICFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('nic');
+    };
+
+    const displayUserData = async () => {
+      const nic = getNICFromUrl();
+      if (nic) {
+        try {
+          const q = query(collection(db, 'Students'), where('nic', '==', nic));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0].data();
+            document.getElementById('userData').innerHTML = `
+              <p>Batch No: ${doc.batch_no}</p>
+              <p>Certification No: ${doc.certification_no}</p>
+              <p>Course: ${doc.course}</p>
+              <p>Course Code: ${doc.course_code}</p>
+              <p>Name: ${doc.name}</p>
+              <p>NIC: ${doc.nic}</p>
+              <p>Start Date: ${doc.start_date}</p>
+              <p>End Date: ${doc.end_date}</p>
+              <p>Effective Date: ${doc.eff_date}</p>
+            `;
+          } else {
+            document.getElementById('userData').textContent = 'No data found for this NIC.';
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      } else {
+        document.getElementById('userData').textContent = 'NIC not provided.';
+      }
+    };
+
+    displayUserData();
+  </script>
+</body>
+</html>
