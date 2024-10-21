@@ -23,13 +23,25 @@
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
       max-width: 500px;
+      text-align: center;
+    }
+    .logo {
+      width: 100px;
+      height: auto;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h3 class="text-center mb-4">User Data</h3>
+    <!-- Logo Section -->
+    <img src="GreenwayTrainingCenter.jpeg" alt="Logo" class="logo">
+    
+    <!-- Header -->
+    <h3 class="text-center mb-4">Certification Data</h3>
+    
+    <!-- User Data Section -->
     <div id="userData" class="text-start"></div>
   </div>
 
@@ -69,12 +81,12 @@
           if (!querySnapshot.empty) {
             const doc = querySnapshot.docs[0].data();
             document.getElementById('userData').innerHTML = `
-              <p><strong>Batch No:</strong> ${doc.batch_no}</p>
-              <p><strong>Certification No:</strong> ${doc.certification_no}</p>
+              <p><strong>NIC:</strong> ${doc.nic}</p>
+              <p><strong>Name:</strong> ${doc.name}</p>
               <p><strong>Course:</strong> ${doc.course}</p>
               <p><strong>Course Code:</strong> ${doc.course_code}</p>
-              <p><strong>Name:</strong> ${doc.name}</p>
-              <p><strong>NIC:</strong> ${doc.nic}</p>
+              <p><strong>Batch No:</strong> ${doc.batch_no}</p>
+              <p><strong>Certification No:</strong> ${doc.certification_no}</p>
               <p><strong>Start Date:</strong> ${doc.start_date}</p>
               <p><strong>End Date:</strong> ${doc.end_date}</p>
               <p><strong>Effective Date:</strong> ${doc.eff_date}</p>
